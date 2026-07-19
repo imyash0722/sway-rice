@@ -1,0 +1,348 @@
+# vim: ft=config
+# Default config for sway
+#
+# Copy this to ~/.config/sway/config and edit it to your liking.
+#
+# Read `man 5 sway` for a complete reference.
+
+### Variables
+#
+# Logo key. Use Mod1 for Alt.
+set $mod Mod4
+
+# Home row direction keys, like vim
+set $left h
+set $down j
+set $up k
+set $right l
+
+# Some menus
+set $quickmenu pkill -x rofi || rofi -show drun
+# the weird arguments are needed otherwise blender crashes
+
+# Screenshot section
+set $screenshot_dir ~/Pictures/Screenshots/
+set $grimshot $sway_scripts/grimshot
+set $screenclip $grimshot --notify save area - | satty --filename -
+set $screenshot $grimshot --notify save screen - | satty --filename -
+set $windowshot $grimshot --notify save window - | satty --filename -
+set $screenvideo $sway_scripts/screenvideo
+
+# Default Programs
+set $term foot
+set $explorer env QT_QPA_PLATFORMTHEME=kde dolphin
+set $mail firefox-developer-edition "https://mail.google.com"
+set $browser firefox-developer-edition
+set $password_mngr rofi-rbw --selector rofi --typer wtype --clipboarder wl-copy
+set $bluetooth_mngr blueman-manager
+set $calculator wofi-calc
+set $photo_editor gtk-launch ~/.local/share/applications/photopea.desktop
+set $settings nwg-look
+set $quick_notes "wezterm start --cwd ~/Notes --class wezterm.floating.notes -- zsh -i -c nvim"
+
+# Scripts
+
+set $sway_scripts ~/.config/sway/scripts/
+
+set $debug_window $sway_scripts/debug-window
+set $toggle_layout $sway_scripts/toggle-layout
+set $create_floating $sway_scripts/create-floating
+set $toggle_gaps $sway_scripts/toggle-gaps
+set $toggle_bar $sway_scripts/toggle-bar
+set $select_window $sway_scripts/select-window
+set $focus_next_tab $sway_scripts/foxus-next-tab
+set $lock_screen swaylock
+set $turn_off_screens $sway_scripts/turn-off-screens
+
+# Input configuration
+input * {
+    xkb_layout us
+    xkb_capslock disabled
+}
+
+input "type:keyboard" xkb_options caps:escape
+
+smart_gaps off
+gaps inner 3
+gaps outer 3
+
+default_border none
+
+### Output configuration
+#
+# Default wallpaper (more resolutions are available in @datadir@/backgrounds/sway/)
+exec_always pkill mpvpaper; mpvpaper -o "no-audio loop panscan=1.0" '*' /home/pineapple/Pictures/Wallpapers/4000x4000__Hakui_By-pass.gif
+
+output DP-1 scale 1.5
+output eDP-1 scale 1
+
+### Idle configuration
+exec swayidle -w \
+    timeout 300 $lock_screen \
+    timeout 600 $turn_off_screens \
+         resume 'swaymsg "output * dpms on"' \
+    before-sleep $lock_screen
+
+#
+# This will lock your screen after 300 seconds of inactivity, then turn off
+# your displays after another 300 seconds, and turn your screens back on when
+# resumed. It will also lock your screen before your computer goes to sleep.
+
+### Input configuration
+input "1739:24385:Synaptics_TM2438-005" {
+   dwt enabled
+   tap enabled
+   natural_scroll enabled
+   middle_emulation enabled
+}
+
+### Key bindings
+#
+# Basics:
+#
+  bindsym --to-code $mod+space exec $quickmenu
+  bindsym --to-code $mod+q kill
+  bindsym --to-code $mod+Shift+q exec ~/.config/sway/scripts/power.sh
+  bindsym --to-code $mod+Return exec $term
+  bindsym --to-code $mod+Shift+Return exec $create_floating $term
+  bindsym --to-code $mod+e exec $explorer
+  bindsym --to-code $mod+Comma exec $settings
+  bindsym --to-code $mod+b exec $browser
+  bindsym --to-code $mod+n exec $quick_notes
+  bindsym --to-code $mod+Shift+w exec $term -e nmtui
+  bindsym --to-code $mod+Shift+b exec $bluetooth_mngr
+  bindsym --to-code $mod+Shift+Comma exec $config_editor
+  bindsym --to-code $mod+p exec $password_mngr
+  bindsym --to-code $mod+Shift+p exec grim -g "$(slurp -p)" -t ppm - | convert - -format '%[pixel:p{0,0}]' txt:- | tail -n 1 | cut -d ' ' -f 4 | wl-copy
+  bindsym --to-code $mod+v exec cliphist list | rofi -dmenu -p "Clipboard" | cliphist decode | wl-copy
+
+  # Drag and resize floating windows with mouse right/left drag
+  floating_modifier $mod normal
+
+  # Reload the configuration file
+  bindsym --to-code $mod+Shift+c reload
+
+  # Multimedia Audio Keys
+  bindsym --locked --no-repeat XF86AudioMute exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+  bindsym --locked XF86AudioMicMute exec ~/.config/sway/scripts/mic-debounce
+  bindsym --locked XF86AudioNext exec playerctl next
+  bindsym --locked XF86AudioPrev exec playerctl previous
+  bindsym --locked XF86AudioPlay exec playerctl play-pause
+  bindsym --locked XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
+  bindsym --locked XF86AudioRaiseVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+
+
+  #Increase brightness
+  bindsym XF86MonBrightnessUp exec brightnessctl set +5%
+  bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
+
+#
+# Moving around:
+#
+  # Move your focus around
+  bindsym --to-code $mod+$left focus left
+  bindsym --to-code $mod+$down focus down
+  bindsym --to-code $mod+$up focus up
+  bindsym --to-code $mod+$right focus right
+
+  # Or use $mod+[up|down|left|right]
+  bindsym --to-code $mod+Left focus left
+  bindsym --to-code $mod+Down focus down
+  bindsym --to-code $mod+Up focus up
+  bindsym --to-code $mod+Right focus right
+
+  # Move the focused window with the same, but add Shift
+  bindsym --to-code $mod+Shift+$left move left
+  bindsym --to-code $mod+Shift+$down move down
+  bindsym --to-code $mod+Shift+$up move up
+  bindsym --to-code $mod+Shift+$right move right
+
+  bindsym --to-code $mod+Control+Left move workspace to output left
+  bindsym --to-code $mod+Control+Right move workspace to output right
+  bindsym --to-code $mod+Control+Up move workspace to output up
+  bindsym --to-code $mod+Control+Down move workspace to output down
+
+  # Ditto, with arrow keys
+  bindsym --to-code $mod+Shift+Left move left
+  bindsym --to-code $mod+Shift+Down move down
+  bindsym --to-code $mod+Shift+Up move up
+  bindsym --to-code $mod+Shift+Right move right
+#
+# Workspaces:
+#
+#
+  corner_radius 4
+  for_window [class="zoom"] floating enable
+  for_window [app_id="io.github.tasks"] floating enable, resize set 380 540
+  for_window [app_id="wezterm.floating.notes"] floating enable, move position center, resize set 50ppt 50ppt, border pixel 1, border color #ffffff
+  for_window [app_id="com.github.gi_lom.dialect"] floating enable, resize set 800 400, sticky enable
+  for_window [app_id="kcalc"] floating enable
+  for_window [app_id="qalculate-gtk"] floating enable
+  for_window [title="Zoom Meeting.*"] floating disable
+  for_window [title="Firefox Developer Edition — Sharing Indicator"] floating enable, sticky enable, move position 10 980, resize set 75 50
+  for_window [title="Firefox — Sharing Indicator"] floating enable, sticky enable, move position 10 980, resize set 75 50
+  for_window [app_id="firefox" title="Bitwarden"] floating enable, move position 2000 50, resize set 400 600
+  for_window [title="Property Browser"] floating enable
+  for_window [title="Picture in Picture"] floating enable
+  for_window [title="Zoom Meeting.*"] inhibit_idle visible
+  for_window [app_id="firefox" title="^Picture-in-Picture$"] floating enable, move position 1300 600, sticky enable, resize set 600 450
+  for_window [app_id="org.twosheds.iwgtk"] floating enable
+  for_window [app_id="iwgtk"] floating enable
+  for_window [app_id="blueman-manager"] floating enable
+  for_window [app_id="foot.nmtui"] floating enable, move position center
+  for_window [app_id="foot.pipemixer"] floating enable, move position center
+  for_window [app_id="foot.bluetui"] floating enable, move position center
+  for_window [app_id="foot.batctl"] floating enable, move position center
+  for_window [app_id="org.pulseaudio.pavucontrol"] floating enable
+
+  set $ws1 "1: Code"
+    assign [app_id="Alacritty"] $ws1
+    assign [app_id="Kitty"] $ws1
+    assign [app_id="wezterm"] $ws1
+    assign [app_id="org.wezfurlong.wezterm"] $ws1
+    
+  set $ws2 "2: Browser"
+    assign [class="^Firefox"] $ws2
+    assign [class="Chromium"] $ws2
+    assign [class="Google-chrome-beta"] $ws2
+    assign [app_id="google-chrome-beta"] $ws2
+    assign [class="Google-chrome"] $ws2
+    assign [app_id="google-chrome"] $ws2
+
+  set $ws3 "3: Chat"
+
+  set $ws4 "4: Files"
+    assign [app_id="org.gnome.Nautilus"] $ws4
+    assign [class="org.gnome.Nautilus"] $ws4
+
+  # Switch to workspace
+  bindsym --to-code $mod+1 workspace $ws1
+  bindsym --to-code $mod+2 workspace $ws2
+  bindsym --to-code $mod+3 workspace $ws3
+  bindsym --to-code $mod+4 workspace $ws4
+  bindsym --to-code $mod+5 workspace number 5
+  bindsym --to-code $mod+6 workspace number 6
+  bindsym --to-code $mod+7 workspace number 7
+  bindsym --to-code $mod+8 workspace number 8
+  bindsym --to-code $mod+9 workspace number 9
+  bindsym --to-code $mod+0 workspace number 10
+
+  # Move focused container to workspace
+  bindsym --to-code $mod+Shift+1 move container to workspace $ws1
+  bindsym --to-code $mod+Shift+2 move container to workspace $ws2 
+  bindsym --to-code $mod+Shift+3 move container to workspace $ws3 
+  bindsym --to-code $mod+Shift+4 move container to workspace $ws4 
+  bindsym --to-code $mod+Shift+5 move container to workspace number 5
+  bindsym --to-code $mod+Shift+6 move container to workspace number 6
+  bindsym --to-code $mod+Shift+7 move container to workspace number 7
+  bindsym --to-code $mod+Shift+8 move container to workspace number 8
+  bindsym --to-code $mod+Shift+9 move container to workspace number 9
+  bindsym --to-code $mod+Shift+0 move container to workspace number 10
+  # Note: workspaces can have any name you want, not just numbers.
+  # We just use 1-10 as the default.
+
+
+#
+# Layout stuff:
+#
+  # You can "split" the current object of your focus with
+  # $mod+b or $mod+v, for horizontal and vertical splits
+  # respectively.
+
+  # Switch the current container between different layout styles
+  bindsym --to-code $mod+w exec $toggle_layout
+  bindsym --to-code $mod+g exec $toggle_gaps
+  bindsym --to-code $mod+Shift+g exec $toggle_bar
+
+  # Make the current focus fullscreen
+  bindsym --to-code $mod+f fullscreen
+
+  # Toggle the current focus between tiling and floating mode
+  bindsym --to-code $mod+Shift+space floating toggle
+
+
+
+  # Screenshots
+  # -- Entire Screen
+  bindsym --to-code $mod+s exec $screenshot
+  # -- Area Screenshot
+  bindsym --to-code $mod+Shift+s exec $screenclip
+  # -- Screen Recording (OBS)
+  bindsym --to-code $mod+r exec obs
+  # -- Open OBS Recording Folder
+  bindsym --to-code $mod+Shift+r exec nautilus /home/pineapple
+  # -- Select Window
+  bindsym --to-code $mod+Control+s exec $windowshot
+
+  bindsym --to-code $mod+Shift+i exec $debug_window
+
+  bindsym --to-code --no-warn $mod+l exec $lock_screen 
+  bindsym --to-code $mod+c exec $calculator
+#
+# Scratchpad:
+#
+  # Sway has a "scratchpad", which is a bag of holding for windows.
+  # You can send windows there and get them back later.
+
+  # Move the currently focused window to the scratchpad
+  bindsym --to-code $mod+Shift+minus move scratchpad
+
+  # Show the next scratchpad window or hide the focused scratchpad window.
+  # If there are multiple scratchpad windows, this command cycles through them.
+  bindsym --to-code $mod+minus scratchpad show
+#
+# Resizing containers:
+#
+mode "resize" {
+  # left will shrink the containers width
+  # right will grow the containers width
+  # up will shrink the containers height
+  # down will grow the containers height
+  bindsym --to-code $left resize shrink width 100px
+  bindsym --to-code $down resize grow height 100px
+  bindsym --to-code $up resize shrink height 100px
+  bindsym --to-code $right resize grow width 100px
+
+
+  bindsym --to-code Shift+$left resize shrink width 20px
+  bindsym --to-code Shift+$down resize grow height 20px
+  bindsym --to-code Shift+$up resize shrink height 20px
+  bindsym --to-code Shift+$right resize grow width 20px
+
+  # Ditto, with arrow keys
+  bindsym --to-code Left resize shrink width 10px
+  bindsym --to-code Down resize grow height 10px
+  bindsym --to-code Up resize shrink height 10px
+  bindsym --to-code Right resize grow width 10px
+
+  # Return to default mode
+  bindsym --to-code Return mode "default"
+  bindsym --to-code Escape mode "default"
+}
+
+# Handles notifications
+exec_always dunst
+exec_always kdeconnectd
+exec_always kanshi
+xwayland enable
+
+
+# Clipboard
+# `clipman` with no subcommand just prints usage; the watcher below is the real daemon
+exec_always "pkill wl-paste; wl-paste --type text --watch cliphist store & wl-paste --type image --watch cliphist store &"
+
+# Unlock Keyring Daemon
+exec --no-startup-id /usr/bin/kwalletd5
+
+#
+# Status Bar:
+#
+bar {
+  swaybar_command waybar
+  mode dock
+  position top
+}
+
+exec "systemctl --user import-environment {,WAYLAND_}DISPLAY SWAYSOCK; systemctl --user start sway-session.target"
+exec swaymsg -t subscribe '["shutdown"]' && systemctl --user stop sway-session.target
+exec python3 ~/.config/sway/float_saver.py
+animation_duration_ms 300

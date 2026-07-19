@@ -1,0 +1,20 @@
+# Wallpapers - too large for git (stored locally only)
+Pictures/Wallpapers/*.gif
+Pictures/Wallpapers/*.mp4
+Pictures/Wallpapers/*.webm
+Pictures/Wallpapers/*.webp
+Pictures/Wallpapers/*.jpg
+Pictures/Wallpapers/*.jpeg
+Pictures/Wallpapers/*.png
+
+# Secrets / sensitive
+.env
+*.secret
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Corrupt/temp folders
+.nvim_corrupt*

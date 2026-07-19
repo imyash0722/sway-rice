@@ -1,0 +1,18 @@
+# /etc/fstab: static file system information.
+#
+# Use 'blkid' to print the universally unique identifier for a device; this may
+# be used with UUID= as a more robust way to name devices that works even if
+# disks are added and removed. See fstab(5).
+#
+# <file system>             <mount point>  <type>  <options>  <dump>  <pass>
+UUID=57E1-39C8                            /boot          vfat    defaults,umask=0077 0 2
+UUID=c553551b-b757-489e-9fb2-73c03a85292f /              btrfs   subvol=/@,defaults,noatime,compress=zstd:1 0 0
+UUID=c553551b-b757-489e-9fb2-73c03a85292f /home          btrfs   subvol=/@home,defaults,noatime,compress=zstd:1 0 0
+UUID=c553551b-b757-489e-9fb2-73c03a85292f /root          btrfs   subvol=/@root,defaults,noatime,compress=zstd:1 0 0
+UUID=c553551b-b757-489e-9fb2-73c03a85292f /srv           btrfs   subvol=/@srv,defaults,noatime,compress=zstd:1 0 0
+UUID=c553551b-b757-489e-9fb2-73c03a85292f /var/cache     btrfs   subvol=/@cache,defaults,noatime,compress=zstd:1 0 0
+UUID=c553551b-b757-489e-9fb2-73c03a85292f /var/tmp       btrfs   subvol=/@tmp,defaults,noatime,compress=zstd:1 0 0
+UUID=c553551b-b757-489e-9fb2-73c03a85292f /var/log       btrfs   subvol=/@log,defaults,noatime,compress=zstd:1 0 0
+tmpfs                                     /tmp           tmpfs   defaults,noatime,mode=1777 0 0
+UUID=01DCE42B2FB63830 /mnt/SHARED ntfs3 defaults,nofail,force,uid=1000,gid=1000,umask=0022,x-gvfs-show 0 0
+/swapfile none swap defaults 0 0

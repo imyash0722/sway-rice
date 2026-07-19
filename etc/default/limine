@@ -1,0 +1,3 @@
+ESP_PATH="/boot"
+KERNEL_CMDLINE[default]+="quiet nowatchdog splash rw rootflags=subvol=/@ root=UUID=c553551b-b757-489e-9fb2-73c03a85292f amdgpu.ppfeaturemask=0xffffffff video=DP-1:d video=eDP-1:1920x1200"
+BOOT_ORDER="*, *lts, *fallback, Snapshots"
