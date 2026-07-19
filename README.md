@@ -1,4 +1,9 @@
+> [!WARNING]
+> **This project is archived and no longer maintained.**
+> Development has moved to [niri-rice](https://github.com/imyash0722/niri-rice) — a newer, scrollable Wayland setup built on the **niri** compositor. Consider checking that out instead!
+
 <div align="center">
+
 
 <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=700&size=32&duration=3000&pause=1000&color=7FC8FF&center=true&vCenter=true&width=600&lines=sway-rice;A+SwayFX+Wayland+Desktop+Rice" alt="sway-rice" />
 
