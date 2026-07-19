@@ -166,6 +166,7 @@ See [`KEYBINDS.md`](./KEYBINDS.md) for the full keybind reference.
 
 <div align="center">
 
+*Original Sway dotfiles base by [jim-fx](https://github.com/jim-fx/.dotfiles).*<br>
 *Made with 💙 on CachyOS*
 
 </div>
