@@ -31,7 +31,7 @@
 - 🎵 **Cava** — Audio spectrum visualizer in your terminal
 - 🐾 **Foot** — Fast, GPU-rendered Wayland terminal
 - ⭐ **Starship** — Beautiful cross-shell prompt
-- 🔒 **Swaylock** — Lockscreen with wallpaper support
+- 🔒 **Swaylock-effects** — Modern lockscreen: auto-captures and blurs your current screen, featuring a bold digital clock
 - 📦 **GNU Stow ready** — Drop-in structure for easy symlink management
 
 ---
