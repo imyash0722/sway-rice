@@ -26,7 +26,7 @@
 - 🪟 **SwayFX** — Sway fork with window animations, blur, corner radius, and shadows
 - 🎨 **Tokyo Night** colour scheme across all apps
 - 🖥️ **Waybar** — Custom status bar with interactive tray modules (Bluetooth, Network, Volume, Battery)
-- 🚀 **Rofi** — App launcher with a squared-nord dark theme
+- 🚀 **Rofi** — App launcher with a custom 'blues' dark theme
 - 📸 **Satty** — Screenshot annotation tool with auto-save and clipboard copy
 - 🎵 **Cava** — Audio spectrum visualizer in your terminal
 - 🐾 **Foot** — Fast, GPU-rendered Wayland terminal
@@ -154,6 +154,14 @@ See [`KEYBINDS.md`](./KEYBINDS.md) for the full keybind reference.
 | Color Picker | `Mod+Shift+P` |
 | Lock Screen | `Mod+Shift+Q` → Lock |
 | Reload Config | `Mod+Shift+R` |
+
+---
+
+## 🔧 System Scripts (Hardware Fixes)
+
+Inside the `system-scripts/` directory at the root of this repo, you will find a fix for the **MediaTek mt7921e Wi-Fi card** failing to wake from sleep:
+
+- `mt7921e-sleep.sh`: Must be copied to `/usr/lib/systemd/system-sleep/` and made executable (`chmod +x`). It safely unloads the driver before sleep and reloads it on wake to prevent the card from dropping off the PCIe bus.
 
 ---
 
