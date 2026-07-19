@@ -8,6 +8,7 @@
 ![Waybar](https://img.shields.io/badge/Waybar-customised-ffc87f?style=for-the-badge)
 ![Theme](https://img.shields.io/badge/Theme-Tokyo%20Night-1a1b26?style=for-the-badge&logoColor=white)
 ![Shell](https://img.shields.io/badge/Shell-ZSH-89b4fa?style=for-the-badge&logo=gnu-bash&logoColor=white)
+![Distro](https://img.shields.io/badge/Distro-CachyOS-00b4d8?style=for-the-badge&logo=archlinux&logoColor=white)
 
 *A clean, dark Wayland desktop built on SwayFX with animated wallpapers, a polished Waybar, and Rofi launcher — all tuned to Tokyo Night.*
 
@@ -165,6 +166,6 @@ See [`KEYBINDS.md`](./KEYBINDS.md) for the full keybind reference.
 
 <div align="center">
 
-*Made with 💙 on Arch Linux*
+*Made with 💙 on CachyOS*
 
 </div>
