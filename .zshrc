@@ -1,7 +1,7 @@
 export SHELL="/usr/bin/zsh"
 export EDITOR="nvim"
 
-# [[ -f "$HOME/.p10k.zsh" ]] && source "$HOME/.p10k.zsh"
+# # [[ -f "$HOME/.p10k.zsh" ]] && source "$HOME/.p10k.zsh"
 
 export HISTFILE="$HOME/.zsh_history"  # History file
 export HISTSIZE=100000                # Lines kept in memory
@@ -14,10 +14,8 @@ export PATH="$PATH:/usr/sbin"
 # Load custom autocompletions
 export FPATH="$FPATH:$HOME/.config/zsh/completions"
 
-# Setup p10k instant prompt (Disabled)
-# if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-#   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-# fi
+# Setup starship prompt
+eval "$(starship init zsh)"
 
 # Setup zcomet plugin manager
 if [[ ! -f ${ZDOTDIR:-${HOME}}/.zcomet/bin/zcomet.zsh ]]; then
@@ -29,47 +27,8 @@ source ${ZDOTDIR:-${HOME}}/.zcomet/bin/zcomet.zsh
 zcomet load zsh-users/zsh-autosuggestions
 zcomet load zsh-users/zsh-syntax-highlighting
 zcomet load jeffreytse/zsh-vi-mode
-
-# OMZ Plugins requested from Medium Article
-zcomet load ohmyzsh plugins/git
-zcomet load ohmyzsh plugins/dirhistory
-zcomet load ohmyzsh plugins/copyfile
-zcomet load ohmyzsh plugins/copypath
-zcomet load ohmyzsh plugins/copybuffer
-zcomet load ohmyzsh plugins/sudo
-zcomet load ohmyzsh plugins/web-search
-
+# # zcomet load romkatv/powerlevel10k
 zcomet compinit   # faster completions
-zstyle ':completion:*' menu select  # interactive menu on Tab like Fish
-
-# Customizations
-bindkey '^[[C' autosuggest-accept  # Right Arrow to accept suggestion (Fish default)
-
-# kubectl autocompletion
-alias k=kubectl
-if (( $+commands[kubectl] )); then
-  source <(kubectl completion zsh)
-  compdef __start_kubectl k
-fi
-
-# Custom PS1 and Colors (zsh-min style)
-export CLICOLOR=1
-export LSCOLORS=GxFxCxDxBxegedabagaced
-autoload -U colors && colors
-PS1='%F{blue}%B%~%b%f %F{green}❯%f '
-export PROMPT_EOL_MARK=''
-precmd () { print -Pn "\e]2;%-3~\a"; }
-
-# zsh-min Aliases
-alias v='nvim'
-alias g='git'
-alias grep='grep --color=auto'
-alias diff='diff --color=auto'
-alias ip='ip -c=auto'
-alias l='ls'
-alias ll='ls -l'
-alias la='ls -lA'
-alias mv='mv -i'
 
 # Configure zsh vim mode to work with history
 function zvm_before_init() {
@@ -113,7 +72,7 @@ exists podman && {
 }
 
 exists bat && {
-  alias cat="bat --paging=never --style=plain"
+  alias cat="bat"
 }
 
 
@@ -145,12 +104,14 @@ exists-dir "$HOME/Android" && {
 }
 
 exists rg && {
+  alias grep="rg"
   export FZF_DEFAULT_COMMAND="rg --files"
-  export FZF_DEFAULT_OPTS="--height=40% --layout=reverse --info=inline"
+  export FZF_DEFAULT_OPTS="-m --height 50% --border"
 }
 
-exists fdfind && {
-  export FZF_DEFAULT_COMMAND="fdfind --type f"
+exists fd && {
+  alias find="fd"
+  export FZF_DEFAULT_COMMAND="fd --type f"
   export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 }
 
@@ -190,17 +151,6 @@ zle -N fzf-history-from-file
 exists fzf && {
   setopt INC_APPEND_HISTORY
   source <(fzf --zsh)
-
-  tab-or-history() {
-    if [[ -z "$BUFFER" ]]; then
-      zle fzf-history-from-file
-    else
-      zle expand-or-complete
-    fi
-  }
-  zle -N tab-or-history
-  bindkey '^I' tab-or-history
-
   bindkey -M viins '^R' fzf-history-from-file
   bindkey -M vicmd '^R' fzf-history-from-file
   bindkey '^R' fzf-history-from-file
@@ -216,21 +166,27 @@ exists dircolors && {
   alias ls='ls --color=auto'
 }
 
+exists eza && {
+  alias ls='eza --icons'
+  alias ll='eza -la --icons'
+  alias la='eza -a --icons'
+}
+
+exists zoxide && {
+  eval "$(zoxide init zsh --cmd cd)"
+}
+
 
 # pnpm
-export PNPM_HOME="/home/max/.local/share/pnpm"
+export PNPM_HOME="$HOME/.local/share/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
 
-# opencode
-export PATH=/home/max/.opencode/bin:$PATH
+# Added by Antigravity CLI installer
+export PATH="$HOME/.local/bin:$PATH"
 
-# zoxide
-eval "$(zoxide init zsh)"
-alias cd="z"
-
-# Fetch system info on startup
-fastfetch
+# Run fastfetch on startup
+exists fastfetch && fastfetch
